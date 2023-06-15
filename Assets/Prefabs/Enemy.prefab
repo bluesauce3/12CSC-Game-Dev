@@ -230,7 +230,7 @@ Animator:
   m_GameObject: {fileID: 567399309508400711}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: de13a7420582ded45a8d7d3f96889aca, type: 3}
-  m_Controller: {fileID: 9100000, guid: 4c7fe8e1a3919c549a79a706afefd1ce, type: 2}
+  m_Controller: {fileID: 9100000, guid: a3f83997f5128124eb949927573361ae, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -282,6 +282,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
   enemySpeed: 1
+  difficultyCurve: 0
+  gameManagerScript: {fileID: 0}
 --- !u!1 &923489719252421590
 GameObject:
   m_ObjectHideFlags: 0

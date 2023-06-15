@@ -10,16 +10,23 @@ public class CameraController : MonoBehaviour
     public float minRotation = 45f; // Minimum rotation
     public float maxRotation = 135f; // Maximum rotation
     public float sensitivity = 1f;
-    public float cameraOffsetY;
-    public float cameraOffsetX;
+
+    private Vector3 cameraOffset;
+
+    public Vector3 firstPerson;
+    public Vector3 thirdPerson;
 
     private float rotationX;
 
     public GameObject GameManager;
     private GameManager gameManagerScript;
+    public GameObject Player;
+    private PlayerController playerControllerScript;
     void Start()
     {
+        playerControllerScript = Player.GetComponent<PlayerController>();
         gameManagerScript = GameManager.GetComponent<GameManager>();
+        cameraOffset = firstPerson;
     }
 
     // Update is called once per frame
@@ -29,10 +36,14 @@ public class CameraController : MonoBehaviour
         {
             MoveCamera();
         }
-        if (Input.GetKeyDown("p"))
-        {
-
+        playerControllerScript.ThrowMagic(transform.rotation);
+        if (gameManagerScript.viewMode == "1") {
+            cameraOffset = firstPerson;
         }
+        if (gameManagerScript.viewMode == "2") {
+            cameraOffset = thirdPerson;
+        }
+        
     }
     private void MoveCamera()
     {
@@ -41,5 +52,6 @@ public class CameraController : MonoBehaviour
         rotationX -= Input.GetAxis("Mouse Y") * sensitivity;
         rotationX = Mathf.Clamp(rotationX, minRotation, maxRotation);
         transform.Rotate(rotationX - rotation.x, 0, 0);
+        transform.localPosition = cameraOffset;
     }
 }
