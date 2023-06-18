@@ -35,8 +35,9 @@ public class CameraController : MonoBehaviour
         if (gameManagerScript.isGameActive)
         {
             MoveCamera();
+            playerControllerScript.ThrowMagic(transform.rotation);
         }
-        playerControllerScript.ThrowMagic(transform.rotation);
+        
         if (gameManagerScript.viewMode == "1") {
             cameraOffset = firstPerson;
         }

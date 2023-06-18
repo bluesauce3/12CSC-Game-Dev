@@ -8,122 +8,139 @@ using System.Text.RegularExpressions;
 
 public class GameManager : MonoBehaviour
 {
+    //UI elements
     public Button playButton;
     public TextMeshProUGUI gameTitle;
     public GameObject nameInputField;
     public TextMeshProUGUI nameErrorText;
     public Text scoreText;
     public float scoreTextSize;
+
+    //hurt overlay elements
     public GameObject hurtOverlayObject;
     private Image hurtOverlay;
+    private Color hurtOverlayInitialColor;
+
+    //prefabs instantiated
     public GameObject EnemySpawnManager;
     public GameObject Map;
-    public GameObject Tree;
+    public GameObject[] Trees;
 
+    //player-related variables
     public GameObject[] PlayerHearts = new GameObject[3];
-
-    public bool isGameActive = false;
     public string playerName;
-
     public PlayerController playerControllerScript;
-
     public string viewMode;
 
-    private GameObject[] enemies;
-
+    //game-related variables
+    public bool isGameActive = false;
     public float startTime;
     public float timeSinceStart = 0f;
 
+    //enemy-related variables
+    private GameObject[] enemies;
     public int enemiesKilledScore;
 
-    private Color hurtOverlayInitialColor;
 
     // Start is called before the first frame update
     void Start()
     {
-        hurtOverlay = hurtOverlayObject.GetComponent<Image>();
+        hurtOverlay = hurtOverlayObject.GetComponent<Image>(); //get hurtoverlay components
         hurtOverlayInitialColor = hurtOverlay.color;
-        SpawnTrees(Tree, 600);
+        foreach (GameObject Tree in Trees)
+        {
+            SpawnTrees(Tree, 1500); //spawn each type of tree
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isGameActive) {timeSinceStart = Time.time - startTime;}
+        if (isGameActive) {timeSinceStart = Time.time - startTime;} //update relative time variable
         if (Input.GetKeyDown("1") && isGameActive) {
-            viewMode = "1";
+            viewMode = "1"; //first person if 1 pressed
         }
         if (Input.GetKeyDown("2") && isGameActive) {
-            viewMode = "2";
+            viewMode = "2"; //thord person if 2 pressed
         }
         if (playerControllerScript.health == 0) {
-            EndGame();
+            EndGame(); //if player health is 0, end game
         }
-        scoreText.text = "Score: " + (Mathf.Round(timeSinceStart) + enemiesKilledScore);
+        scoreText.text = "Score: " + (Mathf.Round(timeSinceStart) + enemiesKilledScore); //update score text UI
         
     }
 
     public void StartGame() 
     {
-        if (TestNameIsValid(nameInputField.GetComponent<TMP_InputField>().text))
+        if (TestNameIsValid(nameInputField.GetComponent<TMP_InputField>().text)) //if name is valid
         { 
-            isGameActive = true;
-            Instantiate(EnemySpawnManager, transform.position, transform.rotation);
+            isGameActive = true; //start game mechanics
+            Instantiate(EnemySpawnManager, transform.position, transform.rotation); //start enemies spawning
+
             gameTitle.gameObject.SetActive(false);
-            playButton.gameObject.SetActive(false);
+            playButton.gameObject.SetActive(false); //hide start menu UI 
             nameInputField.SetActive(false);
             nameErrorText.gameObject.SetActive(false);
-            scoreText.gameObject.SetActive(true);
+
+            scoreText.gameObject.SetActive(true); //show score UI and move to new place
             scoreText.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0f);
             scoreText.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(1f, 0f);
             scoreText.gameObject.GetComponent<Text>().alignment = TextAnchor.LowerRight;
             scoreText.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-Screen.width/(2*scoreTextSize), Screen.height/(2*scoreTextSize), 0);
             scoreText.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width/scoreTextSize, Screen.height/scoreTextSize);
-            Cursor.lockState = CursorLockMode.Locked;
-            startTime = Time.time;
-            enemiesKilledScore = 0;
+
+            Cursor.lockState = CursorLockMode.Locked; //lock cursor for better gameplay
+            startTime = Time.time; //start time
+            enemiesKilledScore = 0; //set enemies killed to 0
+
             foreach (GameObject heart in PlayerHearts)
-            {heart.SetActive(true);}
+            {heart.SetActive(true);} // show all player hearts
         } else {
-            nameErrorText.gameObject.SetActive(true);
+            nameErrorText.gameObject.SetActive(true); //if name is invalid, show error text
         }
     }
-    public void EndGame(){
-        playerControllerScript.health = 3;
-        isGameActive = false;
+    public void EndGame(){ //at end of game
+        playerControllerScript.health = 3; //reset helath
+        isGameActive = false; //stop game mechanics
+
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
-            Destroy(enemy);
+            Destroy(enemy); //destroy all enemies
         }
-        viewMode = "1";
-        gameTitle.gameObject.SetActive(true);
+        viewMode = "1"; //back to first person
+
+        gameTitle.gameObject.SetActive(true); //show all UI elements
         playButton.gameObject.SetActive(true);
         nameInputField.GetComponent<TMP_InputField>().text = "";
         nameInputField.SetActive(true);
+
         scoreText.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-        scoreText.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
+        scoreText.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f); //move score
         scoreText.gameObject.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
         scoreText.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -140, 0);
-        Cursor.lockState = CursorLockMode.None;
+
+        Cursor.lockState = CursorLockMode.None; //let mouse be free
     }
-    public bool TestNameIsValid(string testPlayerName)
+    public bool TestNameIsValid(string testPlayerName) //test name is between 2-10 characters inclusive and contains at least 1 letter
     {
         return (testPlayerName.Length >= 2 && testPlayerName.Length <= 10 
         && Regex.IsMatch(testPlayerName, "[a-zA-Z]"));
     }
-    public void removeHeart(int playerHealth)
+    public void removeHeart(int playerHealth) //remove 1 heart
     {
         PlayerHearts[playerHealth].SetActive(false);
         StartCoroutine(hurtOverlayCountdown(1.5f));
 
     }
-    public void SpawnTrees(GameObject tree, int numberOfTrees)
+    public void SpawnTrees(GameObject tree, int numberOfTrees) //spawn a bunch of trees; random rotation position and size
     {
         for (int i = 0; i < numberOfTrees; i++)
         {
-            GameObject lastTree = Instantiate(tree, new Vector3(Random.Range(-Map.transform.localScale.x, Map.transform.localScale.x), 0, Random.Range(-Map.transform.localScale.z, Map.transform.localScale.z)),
-            transform.rotation);
             float scaleFactor = Mathf.Pow(10, Random.Range(-1f, 1f));
+            float rotationFactor = Random.Range(0, 359);
+            GameObject lastTree = Instantiate(tree, new Vector3(Random.Range(-Map.transform.localScale.x, Map.transform.localScale.x), 0, Random.Range(-Map.transform.localScale.z, Map.transform.localScale.z))*5,
+            transform.rotation);
             lastTree.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            lastTree.transform.Rotate(new Vector3(0, rotationFactor, 0));
 
         }
 

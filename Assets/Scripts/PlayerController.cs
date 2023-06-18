@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     public float speed;
     public float strafeSpeed;
-    public float rotationSpeed;     //all variables are public to edit in Unity GUI
+    public float rotationSpeed;     //all variables are public tso i can edit quickly in Unity GUI
     public float jumpStrength;
     public bool isOnGround;
     public int health;
@@ -54,16 +54,16 @@ public class PlayerController : MonoBehaviour
         } else {    //first person 
             playerMesh.SetActive(false);
         }
-        //Reset rotation so the player doesnt tip over
+        //reset rotation so the player doesnt tip over
         transform.Rotate(0 - transform.rotation.x, 0, 0 - transform.rotation.z);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground")) {
+        if (collision.gameObject.CompareTag("Ground")) { //if on ground check so player can jump
             isOnGround = true;
         }
-        if (collision.gameObject.CompareTag("Enemy") && !damageImmune) {
+        if (collision.gameObject.CompareTag("Enemy") && !damageImmune) {//if hit by enemy remove health and start immunity cooldown
             health -= 1;
             gameManagerScript.removeHeart(health);
             gameManagerScript.hurtOverlayCountdown(3);
@@ -71,8 +71,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //Get 1, 0 or -1 based on +- or 0 of number
-    private int GetSignOfNumber(float number) 
+    //get 1, 0 or -1 based on +- or 0 of number
+    private int GetSignOfNumber(float number) //used for animations
     {
         if (number == 0)
         {
@@ -93,25 +93,27 @@ public class PlayerController : MonoBehaviour
         mouseXInput = Input.GetAxis("Mouse X");
         if (verticalInput <= 0) 
         {
-            //slow player down when strafing
+            //slow player down when strafing 
             transform.Translate(new Vector3(horizontalInput, 0, verticalInput) * Time.deltaTime * speed * strafeSpeed);
         } else
         {
+            //move at regular speed when not strafing
             transform.Translate(new Vector3(horizontalInput, 0, verticalInput) * Time.deltaTime * speed);
         }
-        //keep player inbounds
+        //keep player inbounds based on map size
         if (transform.position.x > Map.transform.localScale.x * 5)
         {
             transform.Translate(transform.position.x - Map.transform.localScale.x * 5, 0, 0);
         }
         
 
-        m_Animator.SetFloat("VerticalVelocity", GetSignOfNumber(verticalInput));
+        m_Animator.SetFloat("VerticalVelocity", GetSignOfNumber(verticalInput)); //give animator properties to animate directions correctly
         m_Animator.SetFloat("HorizontalVelocity", GetSignOfNumber(horizontalInput));             
 
-            transform.Rotate(new Vector3(0, mouseXInput, 0) * rotationSpeed);
+        transform.Rotate(new Vector3(0, mouseXInput, 0) * rotationSpeed); //rotate player
+
         if (Input.GetKeyDown("space") && isOnGround && 
-        ((horizontalInput == 0) || !(verticalInput == 0))) 
+        ((horizontalInput == 0) || !(verticalInput == 0))) //if on ground, make player jump and animate
         {
             playerRb.AddForce(new Vector3(0, jumpStrength), ForceMode.Impulse);
             isOnGround = false;
@@ -121,29 +123,29 @@ public class PlayerController : MonoBehaviour
 
     private void UseWeapon()
     {
-        if (Input.GetMouseButton(0) && canUseMagic)
+        if (Input.GetMouseButton(0) && canUseMagic) //if cooldown isnt active and left click pressed, attack
         {
             m_Animator.SetTrigger("Attack");
             StartCoroutine(MagicCooldown());
         }
     }
 
-    private IEnumerator MagicCooldown()
+    private IEnumerator MagicCooldown() //wait for magicCooldownTime
     {
         canUseMagic = false;
         yield return new WaitForSeconds(magicCooldownTime);
         canUseMagic = true;
     }
-    private IEnumerator DamageImmunityCooldown()
+    private IEnumerator DamageImmunityCooldown() //wait for damageImmunityCooldownTime
     {
         damageImmune = true;
         yield return new WaitForSeconds(damageImmunityCooldownTime);
         damageImmune = false;
     }
 
-    public void ThrowMagic(Quaternion rotation) 
+    public void ThrowMagic(Quaternion rotation) //throw magic prefab from in front of player (from CameraController for correct rotation)
     {
-        if (Input.GetMouseButton(0) && canUseMagic && gameManagerScript.isGameActive) 
+        if (Input.GetMouseButton(0) && canUseMagic) 
         {
             Instantiate(MagicPrefab, transform.position + new Vector3(0, 1, 0), rotation);
 
