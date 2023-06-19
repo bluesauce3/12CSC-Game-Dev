@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI nameErrorText;
     public Text scoreText;
     public float scoreTextSize;
+    public GameObject tutorialText;
 
     //hurt overlay elements
     public GameObject hurtOverlayObject;
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     public GameObject EnemySpawnManager;
     public GameObject Map;
     public GameObject[] Trees;
+    public int numberOfTrees;
 
     //player-related variables
     public GameObject[] PlayerHearts = new GameObject[3];
@@ -49,7 +51,7 @@ public class GameManager : MonoBehaviour
         hurtOverlayInitialColor = hurtOverlay.color;
         foreach (GameObject Tree in Trees)
         {
-            SpawnTrees(Tree, 1500); //spawn each type of tree
+            SpawnTrees(Tree, numberOfTrees); //spawn each type of tree
         }
     }
 
@@ -81,6 +83,7 @@ public class GameManager : MonoBehaviour
             playButton.gameObject.SetActive(false); //hide start menu UI 
             nameInputField.SetActive(false);
             nameErrorText.gameObject.SetActive(false);
+            tutorialText.SetActive(true);
 
             scoreText.gameObject.SetActive(true); //show score UI and move to new place
             scoreText.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0f);

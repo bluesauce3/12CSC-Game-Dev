@@ -704,6 +704,7 @@ MonoBehaviour:
   nameErrorText: {fileID: 1014778550}
   scoreText: {fileID: 186368979}
   scoreTextSize: 6
+  tutorialText: {fileID: 1777631650}
   hurtOverlayObject: {fileID: 905469349}
   EnemySpawnManager: {fileID: 8109369240871032697, guid: ff9cba0ea6290594abce79aeab3b6c3e,
     type: 3}
@@ -712,6 +713,7 @@ MonoBehaviour:
   - {fileID: 188972, guid: 7641c7e8354e2c44cab6432d9d2c6d1b, type: 3}
   - {fileID: 184622, guid: c7bcf19bbfa57ed4ea9147dff66d5542, type: 3}
   - {fileID: 185286, guid: 8ed1fa325ca228645ad26dd6eff14768, type: 3}
+  numberOfTrees: 2000
   PlayerHearts:
   - {fileID: 1804138765}
   - {fileID: 3491143}
@@ -2559,7 +2561,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter text...
+  m_text: Enter name...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
