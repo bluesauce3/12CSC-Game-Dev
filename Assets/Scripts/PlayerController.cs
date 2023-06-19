@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
             transform.Translate(new Vector3(horizontalInput, 0, verticalInput) * Time.deltaTime * speed * strafeSpeed);
         } else
         {
-            //move at regular speed when not strafing
+            //move at regular speed
             transform.Translate(new Vector3(horizontalInput, 0, verticalInput) * Time.deltaTime * speed);
         }
         //keep player inbounds based on map size
