@@ -419,11 +419,8 @@ MonoBehaviour:
   rotationSpeed: 0
   minRotation: -45
   maxRotation: 45
-  sensitivity: 1
   firstPerson: {x: 0, y: 1.7, z: 0}
   thirdPerson: {x: 0, y: 3, z: -2}
-  GameManager: {fileID: 852915288}
-  Player: {fileID: 5026799325696708959}
 --- !u!81 &267794250
 AudioListener:
   m_ObjectHideFlags: 0
@@ -713,7 +710,7 @@ MonoBehaviour:
   - {fileID: 188972, guid: 7641c7e8354e2c44cab6432d9d2c6d1b, type: 3}
   - {fileID: 184622, guid: c7bcf19bbfa57ed4ea9147dff66d5542, type: 3}
   - {fileID: 185286, guid: 8ed1fa325ca228645ad26dd6eff14768, type: 3}
-  numberOfTrees: 2000
+  numberOfTrees: 3000
   PlayerHearts:
   - {fileID: 1804138765}
   - {fileID: 3491143}
@@ -5526,7 +5523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Map: {fileID: 122471052}
-  MagicPrefab: {fileID: 1928095168645430368, guid: c076bdd08e3beb144a776859097fbe63,
+  MagicPrefab: {fileID: 7995264106612043738, guid: ada9678fbd2ec64418341a8afcb690a3,
     type: 3}
   speed: 8
   strafeSpeed: 0.6

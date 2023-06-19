@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
             nameInputField.SetActive(false);
             nameErrorText.gameObject.SetActive(false);
             tutorialText.SetActive(true);
+            StartCoroutine(removeTutorialText());
 
             scoreText.gameObject.SetActive(true); //show score UI and move to new place
             scoreText.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0f);
@@ -136,13 +137,13 @@ public class GameManager : MonoBehaviour
     }
     public void SpawnTrees(GameObject tree, int numberOfTrees) //spawn a bunch of trees; random rotation position and size
     {
-        for (int i = 0; i < numberOfTrees; i++)
+        for (int i = 0; i < numberOfTrees; i++) //FOR LOOP
         {
-            float scaleFactor = Mathf.Pow(10, Random.Range(-1f, 1f));
-            float rotationFactor = Random.Range(0, 359);
+            float scaleFactor = Mathf.Pow(10, Random.Range(-1f, 1f));//scale factor uses exponentiation
+            float rotationFactor = Random.Range(0, 359);//rotation uses linear scale
             GameObject lastTree = Instantiate(tree, new Vector3(Random.Range(-Map.transform.localScale.x, Map.transform.localScale.x), 0, Random.Range(-Map.transform.localScale.z, Map.transform.localScale.z))*5,
             transform.rotation);
-            lastTree.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            lastTree.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor); //change scale and rotation
             lastTree.transform.Rotate(new Vector3(0, rotationFactor, 0));
 
         }
@@ -150,19 +151,25 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public IEnumerator hurtOverlayCountdown(float fadeDuration)
+    public IEnumerator hurtOverlayCountdown(float fadeDuration) //hurt overlay function to run in background when hurt
     {
-        hurtOverlay.color = Color.red;
+        hurtOverlay.color = Color.red; //color of overlay
         
         float timer = 0f;
-        while (timer < fadeDuration)
+        while (timer < fadeDuration) //WHILE LOOP
         {
             timer += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, timer/fadeDuration);
+            float alpha = Mathf.Lerp(1f, 0f, timer/fadeDuration); //change alpha value (transparency) as time increases
             Color currentColor = new Color(hurtOverlayInitialColor.r, hurtOverlayInitialColor.g, hurtOverlayInitialColor.b, alpha);
             hurtOverlay.color = currentColor;
             yield return null;
         }
-        hurtOverlay.color = hurtOverlayInitialColor;
+        hurtOverlay.color = hurtOverlayInitialColor; //reset color
+    }
+
+    public IEnumerator removeTutorialText()
+    {
+        yield return new WaitForSeconds(10f);
+        Destroy(tutorialText);
     }
 }
